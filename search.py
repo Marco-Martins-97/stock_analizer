@@ -4,9 +4,9 @@ import requests
 from datetime import datetime
 
 class Search:
-    def __init__(self, folder, ticker, key):
+    def __init__(self, folder, key):
         self.folder = folder
-        self.ticker = ticker
+        self.ticker = ''
         self.key = key
 
 
@@ -54,16 +54,19 @@ class Search:
             filename = f"{function.lower()}.json"
             self.save_to_file(stock_data, folder, filename)
 
-    def get_ticker(self):
+    def get_ticker(self, ticker):
+        self.ticker = ticker
         folder = f'{self.folder}/{self.ticker}'
         if self.folder_exists(folder):
-            if self.folder_updated(folder): return 'updated'
+            if self.folder_updated(folder): return True
             else: 
+                print('updating...')
                 self.update_data(folder)
-                return 'download'
+                return True
 
         else:
+            print('downloading...')
             os.makedirs(folder)
             self.update_data(folder)
 
-            return 'ticker dont exists!'
+            return True
